@@ -1,0 +1,92 @@
+<html>
+<head>
+    <title>{% block title %}Jack and the Beanstalkd{% endblock %}
+
+    <style type="text/css">
+        body {
+            padding: 0px;
+            margin: 0px;
+        }
+
+        #header {
+        margin: 10px;
+        }
+
+        #content {
+        margin: 10px;
+        }
+
+        /*Credits: Dynamic Drive CSS Library */
+        /*URL: http://www.dynamicdrive.com/style/ */
+
+        .solidblockmenu{
+        margin: 0;
+        padding: 0;
+        float: left;
+        font: bold 13px Arial;
+        width: 100%;
+        overflow: hidden;
+        margin-bottom: 1em;
+        border: 1px solid #625e00;
+        border-width: 1px 0;
+        background: black url(/media/blockdefault.gif) center center repeat-x;
+        }
+
+        .solidblockmenu li{
+        display: inline;
+        }
+
+        .solidblockmenu li a{
+        float: left;
+        color: white;
+        padding: 9px 11px;
+        text-decoration: none;
+        border-right: 1px solid white;
+        }
+
+        .solidblockmenu li a:visited{
+        color: white;
+        }
+
+        .solidblockmenu li a:hover, .solidblockmenu li .current{
+        color: white;
+        background: transparent url(/media/blockactive.gif) center center repeat-x;
+        }
+    </style>
+
+</head>
+<body>
+    {% block header %}
+    <div id="header">
+        <h1 style="float: left;font-size: 25px;">
+            <span style="color: blue">Jack</span> 
+            <span style="font-size: 20px;color: grey;">and the</span><br /> 
+            <span style="color: green">Beanstalkd</span>
+        </h1>
+
+        <span style="float: right">
+            welcome {{ user }} | 
+            <a href="/accounts/logout">logout</a>
+        </span>
+
+        <div style="clear: both;"></div>
+    </div>
+    {% endblock %}
+
+    {% block menu %}
+        <ul class="solidblockmenu">
+            <li><a href="/beanstalk/">Home</a></li>
+            <li><a href="/benstallk/inspect/ready/">Ready Queue</a></li>
+        </ul>
+        <br style="clear: left" />
+    {% endblock %}
+
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block footer %}
+        <center><small>by <a href="http://www.andreisavu.ro">Andrei Savu</a></small></center>
+    {% endblock %}
+</body>
+</html>

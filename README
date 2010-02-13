@@ -9,6 +9,16 @@ What is beanstalkd?
 
 See http://xph.us/software/beanstalkd/ for general info.
 
+What can I do using this application?
+-------------------------------------
+
+- put job on queue in a given tube
+- inspect job: view body and statistics
+- inspect burried jobs and kick all or individual
+- inspect delayed jobs
+- view what tubes are currently in use and stats
+- view queue statistics
+
 Requirements
 ------------
 

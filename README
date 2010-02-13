@@ -1,0 +1,22 @@
+
+Jack - Beanstalkd web administration interface
+==============================================
+
+What is beanstalkd?
+-------------------
+
+"... a fast, general-purpose work queue."
+
+See http://xph.us/software/beanstalkd/ for general info.
+
+Requirements
+------------
+
+* Django 1.1
+
+    http://www.djangoproject.com/
+
+* beanstalkc
+
+    http://github.com/earl/beanstalkc
+

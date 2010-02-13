@@ -76,7 +76,9 @@
     {% block menu %}
         <ul class="solidblockmenu">
             <li><a href="/beanstalk/">Home</a></li>
-            <li><a href="/benstallk/inspect/ready/">Ready Queue</a></li>
+            <li><a href="/beanstalk/inspect/">Inspect</a></li>
+            <li><a href="/beanstalk/ready/">Ready</a></li>
+            <li><a href="/beanstalk/delayed/">Delayed</a></li>
         </ul>
         <br style="clear: left" />
     {% endblock %}
@@ -86,6 +88,7 @@
     </div>
 
     {% block footer %}
+        <br /><br />
         <center><small>by <a href="http://www.andreisavu.ro">Andrei Savu</a></small></center>
     {% endblock %}
 </body>

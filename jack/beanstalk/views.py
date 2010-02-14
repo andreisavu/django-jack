@@ -44,6 +44,7 @@ def put(request):
             id = client.put(str(form.cleaned_data['body']), form.cleaned_data['priority'], \
                 form.cleaned_data['delay'], form.cleaned_data['ttr'])
  
+            request.flash.put(notice='job submited to queue with id #%d' % id)
             return redirect('/beanstalk/put/')
     else:
         form = PutForm()

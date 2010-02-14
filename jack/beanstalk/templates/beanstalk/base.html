@@ -69,7 +69,7 @@
             <a href="/accounts/logout">logout</a>
         </span>
 
-        <div style="clear: both;"></div>
+       <div style="clear: both;"></div>
     </div>
     {% endblock %}
 
@@ -83,6 +83,11 @@
             <li><a href="/beanstalk/buried/">Buried</a></li>
         </ul>
         <br style="clear: left" />
+
+        {% if flash.notice %}
+        <center><span style="border: 1px solid #0aa;padding: 5px;">
+        {{ flash.notice }}</span></center>
+        {% endif %}
     {% endblock %}
 
     <div id="content">

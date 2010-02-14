@@ -1,0 +1,3 @@
+[submodule "deps/django-flash"]
+	path = deps/django-flash
+	url = git://github.com/danielfm/django-flash.git

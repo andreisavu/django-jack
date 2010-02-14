@@ -1,0 +1,16 @@
+{% extends "beanstalk/base.html" %}
+
+{% block content %}
+
+<form action="/beanstalk/put/" method="post">
+    <fieldset>
+        <legend>Put a new job on queue</legend>
+        <table>
+        {{ form.as_table }}
+        </table>
+        <button type="submit">Put</button>
+    </fieldset>
+</form>
+
+{% endblock %}
+

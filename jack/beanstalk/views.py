@@ -3,6 +3,7 @@ from django.shortcuts import render_to_response, redirect
 from django.contrib.auth.decorators import login_required
 
 from django.http import Http404
+from django.template import RequestContext
 
 from beanstalk.client import Client, CommandFailed
 from beanstalk.forms import PutForm
@@ -29,7 +30,7 @@ def tube_stats(request, tube=None):
         {'stats': stats,
          'tubes': tubes,
          'current_tube': tube
-        })
+        }, context_instance=RequestContext(request))
 
 @login_required
 def put(request):
@@ -47,5 +48,6 @@ def put(request):
     else:
         form = PutForm()
 
-    return render_to_response('beanstalk/put.html', {'form':form})   
+    return render_to_response('beanstalk/put.html', 
+        {'form':form}, context_instance=RequestContext(request))   
 

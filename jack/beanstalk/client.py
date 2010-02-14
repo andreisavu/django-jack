@@ -1,7 +1,7 @@
 
 from django.conf import settings
 
-from beanstalkc import Connection
+from beanstalkc import Connection, CommandFailed
 
 class Client(object):
     """ A simple proxy object over the default client """

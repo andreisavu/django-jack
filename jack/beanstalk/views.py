@@ -2,7 +2,9 @@
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth.decorators import login_required
 
-from beanstalk.client import Client
+from django.http import Http404
+
+from beanstalk.client import Client, CommandFailed
 
 @login_required
 def index(request):
@@ -15,7 +17,11 @@ def tube_stats(request, tube=None):
     if tube is None:
         stats = client.stats().items()
     else:
-        stats = client.stats_tube(tube).items()
+        try:
+            stats = client.stats_tube(tube).items()
+        except CommandFailed:
+            raise Http404
+ 
     tubes = client.tubes()
 
     return render_to_response('beanstalk/index.html', 

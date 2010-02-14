@@ -3,6 +3,8 @@
 {% block content %}
 
 <b>Tubes:</b>
+    <a href="/beanstalk/">all</a> &nbsp;
+
 {% for tube in tubes %}
     <a href="/beanstalk/tube/{{ tube }}/stats/">
     {% ifequal tube current_tube %}
@@ -10,7 +12,7 @@
     {% else %}
         {{ tube }}
     {% endifequal %}
-    </a>
+    </a> &nbsp;
 {% endfor %}
 <br />
 

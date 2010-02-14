@@ -52,3 +52,24 @@ def put(request):
     return render_to_response('beanstalk/put.html', 
         {'form':form}, context_instance=RequestContext(request))   
 
+@login_required
+def inspect(request, id=None):
+    if request.method == 'POST':
+        id = request.POST['id']
+    
+    try:
+        id = int(id)
+    except (ValueError, TypeError):
+        id = None
+
+    if id:
+        client = Client()
+        job = client.peek(id)
+        stats = job.stats().items()
+    else:
+        job = None
+        stats = []
+
+    return render_to_response('beanstalk/inspect.html',
+        {'job':job, 'stats':stats}, context_instance=RequestContext(request))
+

@@ -1,0 +1,27 @@
+{% extends "beanstalk/base.html" %}
+
+{% block content %}
+
+<form action="/beanstalk/inspect/" method="post">
+    <label>ID:</label>
+    <input type="text" name="id" />
+    <button type="submit">Inspect</button>
+</form>
+
+{% if job %}
+<table>
+    <tr><th>ID</th><td>{{ job.jid }}</td></tr>
+    <tr><th>Body</th><td>{{ job.body }}</td></tr>
+    <tr><th valign="top">Stats</th><td>
+        <table>
+            <tr><th>Key</th><th>Value</th></tr>
+        {% for key, value in stats %}
+            <tr><td>{{ key }}</td><td>{{ value }}</td></tr>
+        {% endfor %}
+        </table>
+    </td></tr>
+</table>
+{% endif %}
+
+{% endblock %}
+

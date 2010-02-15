@@ -85,3 +85,17 @@ def inspect(request, id=None):
     return render_to_response('beanstalk/inspect.html',
         {'job':job, 'stats':stats}, context_instance=RequestContext(request))
 
+@login_required
+def ready(request):
+    try:
+        client = Client()
+    except ConnectionError:
+        return render_unavailable()
+
+    job = client.peek_ready()
+    if job is not None:
+        return redirect('/beanstalk/inspect/%d' % job.jid)
+
+    request.flash.put(notice='no job found ready for execution')
+    return redirect('/beanstalk/inspect/')
+

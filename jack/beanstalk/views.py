@@ -9,6 +9,8 @@ from beanstalk.client import Client, CommandFailed, ConnectionError
 from beanstalk.forms import PutForm
 from beanstalk.shortcuts import render_unavailable
 
+from urlparse import urlsplit
+
 @login_required
 def index(request):
     return tube_stats(request)
@@ -119,3 +121,41 @@ def delayed(request):
 def buried(request):
     return _peek_if(request, 'buried')
 
+
+def _redirect_to_referer_or(request, dest):
+    referer = request.META.get('HTTP_REFERER', None)
+    if referer is None:
+        return redirect(dest)
+
+    try:
+        redirect_to = urlsplit(referer, 'http', False)[2]
+    except IndexError:
+        redirect_to = dest
+
+    return redirect(redirect_to)
+
+@login_required
+def job_delete(request, id):
+    try:
+        client = Client()
+        job = client.peek(int(id))
+
+        if job is not None:
+            job.delete()
+    
+        return _redirect_to_referer_or(request, '/beanstalk/inspect/')
+
+    except ConnectionError:
+        return render_unavailable()
+
+@login_required
+def job_kick(request, id):
+    try:
+        client = Client()
+        client.kick(int(id))
+
+        return redirect('/beanstalk/buried/')
+
+    except ConnectionError:
+        return render_unavailable()
+    

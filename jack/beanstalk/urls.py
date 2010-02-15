@@ -10,4 +10,6 @@ urlpatterns = patterns('',
     (r'^buried/$', views.buried),
     (r'^inspect/(?P<id>\d*)$', views.inspect),
     (r'^tube/(?P<tube>\w+)/stats/$', views.tube_stats),
+    (r'^job/(?P<id>\d+)/delete/$', views.job_delete),
+    (r'^job/(?P<id>\d+)/kick/$', views.job_kick),
 )

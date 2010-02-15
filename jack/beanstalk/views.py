@@ -77,7 +77,11 @@ def inspect(request, id=None):
             return render_unavailable()
 
         job = client.peek(id)
-        stats = job.stats().items()
+        if job is None:
+            request.flash.put(notice='no job found with id #%d' % id)
+            stats = []
+        else:
+            stats = job.stats().items()
     else:
         job = None
         stats = []

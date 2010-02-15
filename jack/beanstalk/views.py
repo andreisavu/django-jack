@@ -81,13 +81,16 @@ def inspect(request, id=None):
             request.flash.put(notice='no job found with id #%d' % id)
             stats = []
         else:
+            buried = job.stats()['state'] == 'buried'
             stats = job.stats().items()
     else:
         job = None
         stats = []
+        buried = False
 
     return render_to_response('beanstalk/inspect.html',
-        {'job':job, 'stats':stats}, context_instance=RequestContext(request))
+        {'job': job, 'stats': stats, 'buried': buried}, 
+        context_instance=RequestContext(request))
 
 def _peek_if(request, status):
     try:

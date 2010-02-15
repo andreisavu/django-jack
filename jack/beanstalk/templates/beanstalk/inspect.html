@@ -28,6 +28,19 @@
         {% endfor %}
         </table>
     </td></tr>
+    <tr>
+        <th>Options</th>
+        <td>
+            {% if buried %}
+            <form action="/beanstalk/job/{{ job.jid }}/kick/" method="post" style="display: inline">
+                <button type="submit">kick</button>
+            </form>
+            {% endif %}
+            <form action="/beanstalk/job/{{ job.jid }}/delete/" method="post" style="display:inline" onsubmit="return confirm('Are you sure?')">
+                <button type="submit">delete</button>
+            </form>
+        </td>
+    </tr>
 </table>
 {% endif %}
 

@@ -89,18 +89,30 @@ def inspect(request, id=None):
     return render_to_response('beanstalk/inspect.html',
         {'job':job, 'stats':stats}, context_instance=RequestContext(request))
 
-@login_required
-def ready(request):
+def _peek_if(request, status):
     try:
         client = Client()
     except ConnectionError:
         return render_unavailable()
 
-    job = client.peek_ready()
+    job = getattr(client, "peek_%s" % status)()
     if job is not None:
         return inspect(request, job.jid)
 
-    request.flash.put(notice='no job found ready for execution')
+    request.flash.put(notice='no job found')
     return redirect('/beanstalk/inspect/')
 
+
+@login_required
+def ready(request):
+    return _peek_if(request, 'ready')
+
+
+@login_required
+def delayed(request):
+    return _peek_if(request, 'delayed')
+
+@login_required
+def buried(request):
+    return _peek_if(request, 'buried')
 

@@ -5,8 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.template import RequestContext
 
-from beanstalk.client import Client, CommandFailed
+from beanstalk.client import Client, CommandFailed, ConnectionError
 from beanstalk.forms import PutForm
+from beanstalk.shortcuts import render_unavailable
 
 @login_required
 def index(request):
@@ -14,7 +15,10 @@ def index(request):
 
 @login_required
 def tube_stats(request, tube=None):
-    client = Client()
+    try:
+        client = Client()
+    except ConnectionError:
+        return render_unavailable()
 
     if tube is None:
         stats = client.stats().items()
@@ -38,7 +42,11 @@ def put(request):
         form = PutForm(request.POST)
         if form.is_valid():
 
-            client = Client()
+            try:
+                client = Client()
+            except ConnectionError:
+                return render_unavailable()
+
             client.use(form.cleaned_data['tube'])
 
             id = client.put(str(form.cleaned_data['body']), form.cleaned_data['priority'], \
@@ -63,7 +71,11 @@ def inspect(request, id=None):
         id = None
 
     if id:
-        client = Client()
+        try:
+            client = Client()
+        except ConnectionError:
+            return render_unavailable()
+
         job = client.peek(id)
         stats = job.stats().items()
     else:

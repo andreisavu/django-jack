@@ -94,8 +94,9 @@ def ready(request):
 
     job = client.peek_ready()
     if job is not None:
-        return redirect('/beanstalk/inspect/%d' % job.jid)
+        return inspect(request, job.jid)
 
     request.flash.put(notice='no job found ready for execution')
     return redirect('/beanstalk/inspect/')
+
 

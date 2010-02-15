@@ -2,6 +2,12 @@
 
 {% block content %}
 
+<style type="text/css">
+    .stats td, .stats th {
+       padding: 2px;
+    }
+</style>
+
 <form action="/beanstalk/inspect/" method="post">
     <label>ID:</label>
     <input type="text" name="id" />
@@ -9,9 +15,11 @@
 </form>
 
 {% if job %}
-<table>
+<table class="stats">
     <tr><th>ID</th><td>{{ job.jid }}</td></tr>
-    <tr><th>Body</th><td>{{ job.body }}</td></tr>
+    <tr><th>Body</th><td>
+        <textarea rows="3" cols="80">{{ job.body }}</textarea>
+    </td></tr>
     <tr><th valign="top">Stats</th><td>
         <table>
             <tr><th>Key</th><th>Value</th></tr>

@@ -100,7 +100,7 @@ def _peek_if(request, status):
         return inspect(request, job.jid)
 
     request.flash.put(notice='no job found')
-    return redirect('/beanstalk/inspect/')
+    return inspect(request)
 
 
 @login_required

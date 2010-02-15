@@ -14,6 +14,13 @@
     <button type="submit">Inspect</button>
 </form>
 
+{% if tube_prefix %}
+    Peek tube:  
+    {% for tube in tubes %}
+        <a href="{{ tube_prefix }}{{ tube }}">{{ tube }}</a> &nbsp;
+    {% endfor %}
+{% endif %}
+
 {% if job %}
 <table class="stats">
     <tr><th>ID</th><td>{{ job.jid }}</td></tr>

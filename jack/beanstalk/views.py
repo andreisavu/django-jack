@@ -63,7 +63,7 @@ def put(request):
         {'form':form}, context_instance=RequestContext(request))   
 
 @login_required
-def inspect(request, id=None):
+def inspect(request, id=None, tube_prefix=''):
     if request.method == 'POST':
         id = request.POST['id']
     
@@ -72,16 +72,17 @@ def inspect(request, id=None):
     except (ValueError, TypeError):
         id = None
 
-    if id:
-        try:
-            client = Client()
-        except ConnectionError:
-            return render_unavailable()
+    try:
+        client = Client()
+    except ConnectionError:
+        return render_unavailable()
 
+    if id:
         job = client.peek(id)
         if job is None:
             request.flash.put(notice='no job found with id #%d' % id)
             stats = []
+            buried = False
         else:
             buried = job.stats()['state'] == 'buried'
             stats = job.stats().items()
@@ -90,36 +91,41 @@ def inspect(request, id=None):
         stats = []
         buried = False
 
+    tubes = client.tubes()
+
     return render_to_response('beanstalk/inspect.html',
-        {'job': job, 'stats': stats, 'buried': buried}, 
+        {'job': job, 'stats': stats, 'buried': buried, 'tubes': tubes, 'tube_prefix': tube_prefix}, 
         context_instance=RequestContext(request))
 
-def _peek_if(request, status):
+def _peek_if(request, status, tube):
     try:
         client = Client()
     except ConnectionError:
         return render_unavailable()
 
+    if not tube: tube = 'default'
+    client.use(tube)
+
     job = getattr(client, "peek_%s" % status)()
     if job is not None:
-        return inspect(request, job.jid)
+        return inspect(request, job.jid, tube_prefix='/beanstalk/%s/' % status)
 
     request.flash.put(notice='no job found')
-    return inspect(request)
+    return inspect(request, tube_prefix = '/beanstalk/%s/' % status)
 
 
 @login_required
-def ready(request):
-    return _peek_if(request, 'ready')
+def ready(request, tube):
+    return _peek_if(request, 'ready', tube)
 
 
 @login_required
-def delayed(request):
-    return _peek_if(request, 'delayed')
+def delayed(request, tube):
+    return _peek_if(request, 'delayed', tube)
 
 @login_required
-def buried(request):
-    return _peek_if(request, 'buried')
+def buried(request, tube):
+    return _peek_if(request, 'buried', tube)
 
 
 def _redirect_to_referer_or(request, dest):

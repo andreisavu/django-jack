@@ -13,6 +13,11 @@ from urlparse import urlsplit
 
 @login_required
 def index(request):
+    return render_to_response('beanstalk/index.html', 
+        context_instance=RequestContext(request))
+
+@login_required
+def stats(request):
     return tube_stats(request)
 
 @login_required
@@ -32,7 +37,7 @@ def tube_stats(request, tube=None):
  
     tubes = client.tubes()
 
-    return render_to_response('beanstalk/index.html', 
+    return render_to_response('beanstalk/stats.html', 
         {'stats': stats,
          'tubes': tubes,
          'current_tube': tube

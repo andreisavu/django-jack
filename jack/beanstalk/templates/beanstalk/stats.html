@@ -1,0 +1,36 @@
+{% extends "beanstalk/base.html" %}
+
+{% block content %}
+
+<b>Tubes:</b>
+    <a href="/beanstalk/stats/">all</a> &nbsp;
+
+{% for tube in tubes %}
+    <a href="/beanstalk/tube/{{ tube }}/stats/">
+    {% ifequal tube current_tube %}
+        <b>{{ tube }}</b>
+    {% else %}
+        {{ tube }}
+    {% endifequal %}
+    </a> &nbsp;
+{% endfor %}
+<br />
+
+
+{% if current_tube %}
+    <h4>Stats for tube: <i>{{ current_tube }}</i></h4>
+{% else %}
+    <h4>General job queue server stats</h4>
+{% endif %}
+
+<table>
+    <tr><th>Key</th><th>Value</th></tr>
+{% for key, value in stats %}
+    <tr>
+        <td>{{ key }}</td>
+        <td>{{ value }}</td>
+    </tr>
+{% endfor %}
+</table>
+
+{% endblock %}

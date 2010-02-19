@@ -3,13 +3,26 @@
 {% block content %}
 
 <div id="status">
+{% if not checks_errors %}
+
     <img src="/media/check-ok.jpg" style="float: left;margin-right: 50px;margin-left: 20px;"/>
     <h1>System ok. Running as expected.</h1>
+
+    <div style="clear: both;"></div><br />
+{% else %}
+
+    <img src="/media/check-not-ok.jpg" style="float: left;margin-right: 50px;margin-left: 20px;"/>
+    <h1>We've got some errors.</h1>
+    <div style="clear: both"></div><br />
+    <ul>
+        {% for error in checks_errors %}
+        <li><span style="color: red">{{ error }}</span</li>
+        {% endfor %}
+    </ul>
+
+{% endif %}
 </div>
 
-<div class="clear"></div>
-
-<br />
 <h2>global stats</h2>
 
 {% if stats %}

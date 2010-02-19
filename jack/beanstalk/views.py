@@ -8,6 +8,7 @@ from django.template import RequestContext
 from beanstalk.client import Client, CommandFailed, ConnectionError
 from beanstalk.forms import PutForm
 from beanstalk.shortcuts import render_unavailable
+from beanstalk import checks
 
 from urlparse import urlsplit
 
@@ -24,6 +25,8 @@ def index(request):
     except ConnectionError:
         return render_unavailable()
 
+    checks_errors = checks.run_all(client)
+
     stats = _multiget(client.stats(), [
         'current-connections', 
         'uptime', 
@@ -31,6 +34,7 @@ def index(request):
         'version',
         'current-jobs-buried',
         'total-jobs',])
+
     if 'uptime' in stats:
         days = float(stats['uptime']) / 60.0 / 60.0 / 24.0
         stats['uptime'] = '%s (%.2f days)' % (stats['uptime'], days)
@@ -42,7 +46,9 @@ def index(request):
              'current-waiting', 'total-jobs']))
 
     return render_to_response('beanstalk/index.html', 
-        {'stats' : stats, 'tube_stats' : tube_stats},
+        {'stats' : stats, 
+         'tube_stats' : tube_stats,
+         'checks_errors' : checks_errors},
         context_instance=RequestContext(request))
 
 @login_required

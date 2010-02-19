@@ -2,7 +2,27 @@
 
 {% block content %}
 
-System overview.
+<div id="status">
+    <img src="/media/check-ok.jpg" style="float: left;margin-right: 50px;margin-left: 20px;"/>
+    <h1>System ok. Running as expected.</h1>
+</div>
+
+<div class="clear"></div>
+
+<br />
+<h2>global stats</h2>
+
+{% if stats %}
+    <table>
+    <tr><th>Key</th><th>Value</th></tr>
+    {% for key, value in stats.items %}
+    <tr><td>{{ key }}</td><td>{{ value }}</td></tr>
+    {% endfor %}
+    </table>
+{% endif %}
+
+<div class="clear"></div><br />
+<h2>tube stats</h2>
 
 {% endblock %}
 

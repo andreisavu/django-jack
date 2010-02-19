@@ -11,9 +11,29 @@ from beanstalk.shortcuts import render_unavailable
 
 from urlparse import urlsplit
 
+def _multiget(data, keys, default=None):
+    ret = {}
+    for key in keys:
+        ret[key] = data.get(key, default)
+    return ret
+
 @login_required
 def index(request):
+    try:
+        client = Client()
+    except ConnectionError:
+        return render_unavailable()
+
+    stats = _multiget(client.stats(), [
+        'current-connections', 
+        'uptime', 
+        'job-timeouts',
+        'version',
+        'current-jobs-buried',
+        'total-jobs',])
+
     return render_to_response('beanstalk/index.html', 
+        {'stats' : stats},
         context_instance=RequestContext(request))
 
 @login_required

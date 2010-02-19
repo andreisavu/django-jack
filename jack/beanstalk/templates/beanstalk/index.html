@@ -24,5 +24,19 @@
 <div class="clear"></div><br />
 <h2>tube stats</h2>
 
+<div style="width: 60%;">
+{% for tube in tube_stats %}
+    {% if tube %}
+    <table style="float: left;margin: 15px;padding: 10px;border: 1px solid grey">
+        <tr><th>Key</th><th>Value</th></tr>
+        {% for key, value in tube.items %}
+        <tr><td nowrap="1">{{ key }}</td><td nowrap="1">{{ value }}</td></tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+{% endfor %}
+<div style="clear: both"></div>
+</div>
+
 {% endblock %}
 

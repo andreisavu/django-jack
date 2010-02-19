@@ -32,8 +32,14 @@ def index(request):
         'current-jobs-buried',
         'total-jobs',])
 
+    tube_stats = []
+    for tube in client.tubes():
+        tube_stats.append(_multiget(client.stats_tube(tube),
+            ['name', 'pause', 'current-jobs-buried', \
+             'current-waiting', 'total-jobs']))
+
     return render_to_response('beanstalk/index.html', 
-        {'stats' : stats},
+        {'stats' : stats, 'tube_stats' : tube_stats},
         context_instance=RequestContext(request))
 
 @login_required

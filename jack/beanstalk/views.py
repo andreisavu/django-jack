@@ -31,6 +31,9 @@ def index(request):
         'version',
         'current-jobs-buried',
         'total-jobs',])
+    if 'uptime' in stats:
+        days = float(stats['uptime']) / 60.0 / 60.0 / 24.0
+        stats['uptime'] = '%s (%.2f days)' % (stats['uptime'], days)
 
     tube_stats = []
     for tube in client.tubes():

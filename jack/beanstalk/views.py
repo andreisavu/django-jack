@@ -103,7 +103,7 @@ def put(request):
         {'form':form}, context_instance=RequestContext(request))   
 
 @login_required
-def inspect(request, id=None, tube_prefix=''):
+def inspect(request, id=None, tube_prefix='', tube=''):
     if request.method == 'POST':
         id = request.POST['id']
     
@@ -134,7 +134,8 @@ def inspect(request, id=None, tube_prefix=''):
     tubes = client.tubes()
 
     return render_to_response('beanstalk/inspect.html',
-        {'job': job, 'stats': stats, 'buried': buried, 'tubes': tubes, 'tube_prefix': tube_prefix}, 
+        {'job': job, 'stats': stats, 'buried': buried, 'tubes': tubes,
+         'tube_prefix': tube_prefix, 'current_tube': tube},
         context_instance=RequestContext(request))
 
 def _peek_if(request, status, tube):
@@ -148,16 +149,15 @@ def _peek_if(request, status, tube):
 
     job = getattr(client, "peek_%s" % status)()
     if job is not None:
-        return inspect(request, job.jid, tube_prefix='/beanstalk/%s/' % status)
+        return inspect(request, job.jid, tube_prefix='/beanstalk/%s/' % status, tube=tube)
 
     request.flash.put(notice='no job found')
-    return inspect(request, tube_prefix = '/beanstalk/%s/' % status)
+    return inspect(request, tube_prefix='/beanstalk/%s/' % status, tube=tube)
 
 
 @login_required
 def ready(request, tube):
     return _peek_if(request, 'ready', tube)
-
 
 @login_required
 def delayed(request, tube):
@@ -198,7 +198,10 @@ def job_delete(request, id):
 def job_kick(request, id):
     try:
         client = Client()
-        client.kick(int(id))
+        client.use(request.POST['tube'])
+        # The argument to kick is number of jobs not jobId, by default one job
+        # is kicked.
+        client.kick()
 
         return redirect('/beanstalk/buried/')
 

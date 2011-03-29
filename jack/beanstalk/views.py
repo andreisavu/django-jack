@@ -56,6 +56,10 @@ def stats(request):
     return tube_stats(request)
 
 @login_required
+def stats_table(request):
+    return tube_stats_table(request)
+
+@login_required
 def tube_stats(request, tube=None):
     try:
         client = Client()
@@ -76,6 +80,24 @@ def tube_stats(request, tube=None):
         {'stats': stats,
          'tubes': tubes,
          'current_tube': tube
+        }, context_instance=RequestContext(request))
+
+@login_required
+def tube_stats_table(request, tube=None):
+    try:
+        client = Client()
+    except ConnectionError:
+        return render_unavailable()
+
+    tubes = client.tubes()
+    stats = {'all':client.stats().items()}
+
+    for tube in tubes:
+        stats[tube] = client.stats_tube(tube).items()
+
+    return render_to_response('beanstalk/stats_table.html', 
+        {'stats': stats,
+         'tubes': tubes
         }, context_instance=RequestContext(request))
 
 @login_required

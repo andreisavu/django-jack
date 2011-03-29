@@ -1,0 +1,44 @@
+{% extends "beanstalk/base.html" %}
+
+{% block content %}
+
+<b>Tubes Stats:</b>
+    <a href="/beanstalk/stats_table/">all</a> &nbsp;
+
+{% for tube in tubes %}
+    <a href="/beanstalk/tube/{{ tube }}/stats/">
+    {% ifequal tube current_tube %}
+        <b>{{ tube }}</b>
+    {% else %}
+        {{ tube }}
+    {% endifequal %}
+    </a> &nbsp;
+{% endfor %}
+<br />
+<br />
+
+<table>
+    <tr><td class='aligntop'>
+    {% for tube, tube_stats in stats.items %}
+        {% ifnotequal tube "default" %}
+            <table class='floatleft gridwidth {% if forloop.counter|divisibleby:'3' %}clearboth{% endif %}'>
+                <tr><th colspan='2'><h3>{{ tube }}</h3></th></tr>
+                <tr><th>Key</th><th>Value</th></tr>
+                {% for key, value in tube_stats %}
+                    {% ifnotequal key "name" %}
+                        <tr>
+                            <td>{{ key }}</td>
+                            <td>{{ value }}</td>
+                        </tr>
+                    {% endifnotequal %}
+                {% endfor %}
+            </table>
+        {% endifnotequal %}
+        {% if forloop.first %}
+            </td><td class='aligntop'>
+        {% endif %}
+    {% endfor %}
+    </td></tr>
+</table>
+
+{% endblock %}

@@ -18,6 +18,7 @@ What can I do using this application?
 - inspect delayed jobs
 - view what tubes are currently in use and stats
 - view queue statistics
+- do all the above for multiple beanstalkd servers
 
 Requirements
 ------------

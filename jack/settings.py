@@ -22,9 +22,6 @@ DATABASES = {
     }
 }
 
-BEANSTALK_HOST = 'localhost'
-BEANSTALK_PORT = 11300
-
 LOGIN_REDIRECT_URL = '/'
 
 FLASH_IGNORE_MEDIA = True
@@ -99,6 +96,15 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'beanstalk',
+)
+
+### MULTIPLE BEANSTALKD SUPPORT
+BEANSTALK_SERVERS = (
+)
+from django.conf import global_settings
+MIDDLEWARE_CLASSES += ('beanstalk.multiple_beanstalk.Middleware',)
+TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
+    'beanstalk.multiple_beanstalk.ContextProcessor',
 )
 
 try:

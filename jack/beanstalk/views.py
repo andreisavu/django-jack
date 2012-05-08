@@ -21,7 +21,7 @@ def _multiget(data, keys, default=None):
 @login_required
 def index(request):
     try:
-        client = Client()
+        client = Client(request)
     except ConnectionError:
         return render_unavailable()
 
@@ -62,7 +62,7 @@ def stats_table(request):
 @login_required
 def tube_stats(request, tube=None):
     try:
-        client = Client()
+        client = Client(request)
     except ConnectionError:
         return render_unavailable()
 
@@ -85,7 +85,7 @@ def tube_stats(request, tube=None):
 @login_required
 def tube_stats_table(request, tube=None):
     try:
-        client = Client()
+        client = Client(request)
     except ConnectionError:
         return render_unavailable()
 
@@ -107,7 +107,7 @@ def put(request):
         if form.is_valid():
 
             try:
-                client = Client()
+                client = Client(request)
             except ConnectionError:
                 return render_unavailable()
 
@@ -135,7 +135,7 @@ def inspect(request, id=None, tube_prefix='', tube=''):
         id = None
 
     try:
-        client = Client()
+        client = Client(request)
     except ConnectionError:
         return render_unavailable()
 
@@ -162,7 +162,7 @@ def inspect(request, id=None, tube_prefix='', tube=''):
 
 def _peek_if(request, status, tube):
     try:
-        client = Client()
+        client = Client(request)
     except ConnectionError:
         return render_unavailable()
 
@@ -205,7 +205,7 @@ def _redirect_to_referer_or(request, dest):
 @login_required
 def job_delete(request, id):
     try:
-        client = Client()
+        client = Client(request)
         job = client.peek(int(id))
 
         if job is not None:
@@ -219,7 +219,7 @@ def job_delete(request, id):
 @login_required
 def job_kick(request, id):
     try:
-        client = Client()
+        client = Client(request)
         client.use(request.POST['tube'])
         # The argument to kick is number of jobs not jobId, by default one job
         # is kicked.

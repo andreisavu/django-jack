@@ -53,6 +53,36 @@
         color: white;
         background: transparent url(/media/blockactive.gif) center center repeat-x;
         }
+
+        .aligntop{
+        vertical-align: top;
+        }
+
+        .floatleft{
+        float:left;
+        }
+
+        .gridwidth{
+        width:365px;
+        }
+
+        .clearboth{
+        clear:both;
+        }
+
+        h3{
+        background-color: black;
+        color: white;
+        text-align: left;
+        }
+        
+        h3 + table{
+        background-color: #EFEFFE;
+        }
+
+        .aligntop th{
+        text-align: left;
+        }
     </style>
 
 </head>
@@ -68,6 +98,27 @@
         <span style="float: right">
             welcome {{ user }} | 
             <a href="/accounts/logout">logout</a>
+            <br><span>
+                <select id="change_connection">
+                    {% for host, port in connections %}
+                    <option value="{{forloop.counter0}}"
+                            {% if conn_id == forloop.counter0 %}
+                                selected="selected"
+                            {% endif %}>
+                        {{host}}:{{port}}
+                    </option>
+                    {% endfor %}
+                </select>
+                <script>
+                    (function(){
+                        var sel = document.getElementById('change_connection');
+                        sel.onchange = function(){
+                            document.cookie='conn='+sel.value;
+                            location.reload();
+                        };
+                    })();
+                </script>
+            </span>
         </span>
 
        <div style="clear: both;"></div>

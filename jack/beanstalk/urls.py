@@ -5,6 +5,7 @@ import views
 urlpatterns = patterns('',
     (r'^$', views.index),
     (r'^stats/$', views.stats),
+    (r'^stats_table/$', views.stats_table),
     (r'^put/$', views.put),
     (r'^ready/(?P<tube>[\w-]*)$', views.ready),
     (r'^delayed/(?P<tube>[\w-]*)$', views.delayed),

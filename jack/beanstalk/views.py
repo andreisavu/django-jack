@@ -21,7 +21,7 @@ def _multiget(data, keys, default=None):
 @login_required
 def index(request):
     try:
-        client = Client()
+        client = Client(request)
     except ConnectionError:
         return render_unavailable()
 
@@ -56,9 +56,13 @@ def stats(request):
     return tube_stats(request)
 
 @login_required
+def stats_table(request):
+    return tube_stats_table(request)
+
+@login_required
 def tube_stats(request, tube=None):
     try:
-        client = Client()
+        client = Client(request)
     except ConnectionError:
         return render_unavailable()
 
@@ -79,13 +83,31 @@ def tube_stats(request, tube=None):
         }, context_instance=RequestContext(request))
 
 @login_required
+def tube_stats_table(request, tube=None):
+    try:
+        client = Client(request)
+    except ConnectionError:
+        return render_unavailable()
+
+    tubes = client.tubes()
+    stats = {'all':client.stats().items()}
+
+    for tube in tubes:
+        stats[tube] = client.stats_tube(tube).items()
+
+    return render_to_response('beanstalk/stats_table.html', 
+        {'stats': stats,
+         'tubes': tubes
+        }, context_instance=RequestContext(request))
+
+@login_required
 def put(request):
     if request.method == 'POST':
         form = PutForm(request.POST)
         if form.is_valid():
 
             try:
-                client = Client()
+                client = Client(request)
             except ConnectionError:
                 return render_unavailable()
 
@@ -113,7 +135,7 @@ def inspect(request, id=None, tube_prefix='', tube=''):
         id = None
 
     try:
-        client = Client()
+        client = Client(request)
     except ConnectionError:
         return render_unavailable()
 
@@ -140,7 +162,7 @@ def inspect(request, id=None, tube_prefix='', tube=''):
 
 def _peek_if(request, status, tube):
     try:
-        client = Client()
+        client = Client(request)
     except ConnectionError:
         return render_unavailable()
 
@@ -183,7 +205,7 @@ def _redirect_to_referer_or(request, dest):
 @login_required
 def job_delete(request, id):
     try:
-        client = Client()
+        client = Client(request)
         job = client.peek(int(id))
 
         if job is not None:
@@ -197,7 +219,7 @@ def job_delete(request, id):
 @login_required
 def job_kick(request, id):
     try:
-        client = Client()
+        client = Client(request)
         client.use(request.POST['tube'])
         # The argument to kick is number of jobs not jobId, by default one job
         # is kicked.
